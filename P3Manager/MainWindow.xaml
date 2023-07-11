@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="P3Manager.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:P3Manager"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="Root"
+          Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          VerticalAlignment="Stretch"
+          HorizontalAlignment="Stretch">
+
+        <NavigationView x:Name="NavigationView"
+                        SelectionChanged="NavigationView_SelectionChanged"
+                        Header="P3Manager"
+                        IsBackButtonVisible="Collapsed"
+                        Background="Transparent"
+                        IsSettingsVisible="False"
+                        Margin="0">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Hanse"
+                                    Tag="P3Manager.Views.HansePage"
+                                    ToolTipService.ToolTip="Hanse">
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="/Assets/HansePage.png"
+                                    ShowAsMonochrome="False" />
+
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Hubs"
+                                    Tag="P3Manager.Views.HubsPage"
+                                    ToolTipService.ToolTip="Gallery">
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="/Assets/HubsPage.png"
+                                    ShowAsMonochrome="False" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <Frame x:Name="ContentFrame"
+                   Padding="20">
+            </Frame>
+        </NavigationView>
+    </Grid>
+</Window>

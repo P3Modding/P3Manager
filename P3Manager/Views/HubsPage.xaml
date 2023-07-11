@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="P3Manager.Views.HubsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:P3Manager.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:P3Manager.ViewModels"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:p3="using:P3Api"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <Page.DataContext>
+        <viewmodels:HubsPageViewModel x:Name="ViewModel" />
+    </Page.DataContext>
+    <ListView Margin="10" ItemsSource="{x:Bind ViewModel.Hubs}">
+        <ListView.ItemTemplate>
+            <DataTemplate x:DataType="p3:HubData">
+                <StackPanel>
+                    <TextBlock Text="{x:Bind HubId}" />
+                    <controls:DataGrid x:Name="dataGrid" ItemsSource="{x:Bind AccumulatedStatistics}" IsReadOnly="True">
+                    </controls:DataGrid>
+                </StackPanel>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</Page>
