@@ -8,7 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:P3Manager.ViewModels"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:p3="using:P3Api"
+    xmlns:api="using:P3Api"
+    xmlns:models="using:P3Manager.Models"
     mc:Ignorable="d"
     Background="Transparent">
 
@@ -17,7 +18,7 @@
     </Page.DataContext>
     <ListView Margin="10" ItemsSource="{x:Bind ViewModel.Hubs}">
         <ListView.ItemTemplate>
-            <DataTemplate x:DataType="p3:HubData">
+            <DataTemplate x:DataType="models:HubData">
                 <StackPanel>
                     <TextBlock Text="{x:Bind HubId}" />
                     <controls:DataGrid x:Name="dataGrid" ItemsSource="{x:Bind AccumulatedStatistics}" IsReadOnly="True">

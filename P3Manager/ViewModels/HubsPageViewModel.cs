@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using P3Api;
+using P3Manager.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,6 +16,9 @@ namespace P3Manager.ViewModels
 
         public HubsPageViewModel()
         {
+            var handle = new P3Handle();
+            var vispy = handle.ReadTown();
+            Console.WriteLine(vispy);
             this.hubData = new HubData[1]
             {
                 GetHubData(TownId.Visby, new TownId[2] { TownId.Stockholm, TownId.Reval }),

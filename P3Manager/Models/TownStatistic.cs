@@ -1,10 +1,11 @@
-﻿using System;
+﻿using P3Api;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace P3Api
+namespace P3Manager.Models
 {
     public class TownStatistic
     {
