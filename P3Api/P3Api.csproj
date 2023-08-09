@@ -1,13 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	<LangVersion>11.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Update="p3_api.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="p3_api_dotnet.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

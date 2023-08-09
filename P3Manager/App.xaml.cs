@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using P3Manager.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +27,7 @@ namespace P3Manager
     /// </summary>
     public partial class App : Application
     {
+        public P3PollService PollService = new P3PollService();
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -45,6 +47,6 @@ namespace P3Manager
             m_window.Activate();
         }
 
-        private Window m_window;
+        private Window? m_window;
     }
 }
