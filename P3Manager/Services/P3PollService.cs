@@ -11,7 +11,7 @@ namespace P3Manager.Services;
 
 public class P3PollService
 {
-    public static readonly ConcurrentDictionary<TownId, Town?> Data = new();
+    public static volatile Town?[] Data = new Town[40];
 
     public P3PollService()
     {
@@ -27,10 +27,10 @@ public class P3PollService
             foreach (var town in (TownId[]) Enum.GetValues(typeof(TownId)))
             {
                 var townData = handle.ReadTown(town);
-                Data.AddOrUpdate(town, townData, (k, v) => townData);
+                Data[(int) town] = townData;
             }
             watch.Stop();
-            Debug.WriteLine($"Towns fetched in {watch.ElapsedMilliseconds}");
+            //Debug.WriteLine($"Towns fetched in {watch.ElapsedMilliseconds}");
             await Task.Delay(1000);
         }
     }

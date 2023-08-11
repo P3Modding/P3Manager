@@ -6,13 +6,37 @@
     xmlns:local="using:P3Manager.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:P3Manager.ViewModels"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:api="using:P3Api"
+    xmlns:models="using:P3Manager.Models"
     mc:Ignorable="d"
     Background="Transparent">
 
-    <StackPanel VerticalAlignment="Stretch"
-                Margin="0">
-        <TextBlock>heasdfllo</TextBlock>
-        <TextBlock>heasdfllo</TextBlock>
-        <TextBlock>heasdfllo</TextBlock>
-    </StackPanel>
+    <Page.DataContext>
+        <viewmodels:HansePageViewModel x:Name="ViewModel" />
+    </Page.DataContext>
+    <ListView Margin="10" ItemsSource="{x:Bind ViewModel.DummyTowns, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="False">
+        <ListView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel></StackPanel>
+            </ItemsPanelTemplate>
+        </ListView.ItemsPanel>
+        <!--
+        <ListView.ItemTemplate>
+            <DataTemplate x:DataType="viewmodels:DummyTown">
+                <StackPanel>
+                    <TextBlock Text="{x:Bind Id}" Margin="10 10 10 10" />
+                    <ListView ItemsSource="{x:Bind Wares, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="False">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+        -->
+    </ListView>
 </Page>

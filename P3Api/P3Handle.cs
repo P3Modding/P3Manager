@@ -14,7 +14,7 @@ public unsafe class P3Handle
         {
             throw new InvalidOperationException("no patrician3 found");
         }
-        Debug.WriteLine($"Opening {processes[0].Id}");
+        // Debug.WriteLine($"Opening {processes[0].Id}");
         this.api = NativeMethods.new_api((uint)processes[0].Id);
     }
 
@@ -28,6 +28,7 @@ public unsafe class P3Handle
 
         var town = new Town()
         {
+            Id = townId,
             Storage = new Storage()
             {
                 Wares = new Span<int>(town_ptr->storage.wares, 0x18).ToArray(),

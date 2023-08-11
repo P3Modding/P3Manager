@@ -2,6 +2,7 @@
 #pragma warning disable CS8618
 public class Town
 {
+    public TownId Id { get; set; }
     public Storage Storage { get; set; }
     public int[] DailyConsumptionsCitizens { get; set; }
     public Office[] Offices { get; set; }

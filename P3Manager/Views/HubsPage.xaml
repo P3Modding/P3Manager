@@ -16,12 +16,12 @@
     <Page.DataContext>
         <viewmodels:HubsPageViewModel x:Name="ViewModel" />
     </Page.DataContext>
-    <ListView Margin="10" ItemsSource="{x:Bind ViewModel.Hubs}">
+    <ListView Margin="10" ItemsSource="{x:Bind ViewModel.Hubs, Mode=OneWay}" SelectionMode="None">
         <ListView.ItemTemplate>
-            <DataTemplate x:DataType="models:HubData">
+            <DataTemplate x:DataType="models:HubModel">
                 <StackPanel>
-                    <TextBlock Text="{x:Bind HubId}" />
-                    <controls:DataGrid x:Name="dataGrid" ItemsSource="{x:Bind AccumulatedStatistics}" IsReadOnly="True">
+                    <TextBlock Text="{x:Bind Town}" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Margin="10" />
+                    <controls:DataGrid ItemsSource="{x:Bind WareData, Mode=OneWay}" IsReadOnly="True" >
                     </controls:DataGrid>
                 </StackPanel>
             </DataTemplate>
