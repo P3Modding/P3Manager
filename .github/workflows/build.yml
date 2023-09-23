@@ -66,5 +66,7 @@ jobs:
       run: |
         cp P3Manager\P3Manager.csproj.user.release P3Manager\P3Manager.csproj.user
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERT }}")
-        [IO.File]::WriteAllBytes("P3Manager\P3Manager_TemporaryKey", $pfx_cert_byte)
+        [IO.File]::WriteAllBytes("P3Manager\P3Manager_TemporaryKey.pfx", $pfx_cert_byte)
         dotnet publish -c ${{ matrix.configuration }}
+        tree
+
