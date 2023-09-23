@@ -66,10 +66,11 @@ jobs:
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERT }}")
         [IO.File]::WriteAllBytes("P3Manager\P3Manager_TemporaryKey.pfx", $pfx_cert_byte)
         dotnet publish -c ${{ matrix.configuration }}
-        tree
+        Get-ChildItem -r **/P3Manager_*.msix
         $path = Get-ChildItem -r **/P3Manager_*.msix
         echo "MSIX_PATH=$path" >> $env:GITHUB_ENV
         echo "path=$path"
+        ls $path
 
     - name: Release
       uses: softprops/action-gh-release@v1
