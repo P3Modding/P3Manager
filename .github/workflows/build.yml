@@ -69,9 +69,12 @@ jobs:
         [IO.File]::WriteAllBytes("P3Manager\P3Manager_TemporaryKey.pfx", $pfx_cert_byte)
         dotnet publish -c ${{ matrix.configuration }}
         tree
+        $path = Get-ChildItem -r **/P3Manager\P3Manager_*.msix
+        echo "MSIX_PATH=$path" >> $GITHUB_ENV
+        echo $path
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: MSIX Package
-        path: '**\*.msix'
+        path: ${{ env.MSIX_PATH }}
