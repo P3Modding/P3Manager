@@ -67,7 +67,7 @@ jobs:
         [IO.File]::WriteAllBytes("P3Manager\P3Manager_TemporaryKey.pfx", $pfx_cert_byte)
         dotnet publish -c ${{ matrix.configuration }}
         $path = (Get-ChildItem -r **/P3Manager_*.msix).FullName
-        $path = $path -replace '\\','/'`
+        $path = $path -replace '\\','/'
         echo "MSIX_PATH=$path" >> $env:GITHUB_ENV
         echo "path=$path"
 
