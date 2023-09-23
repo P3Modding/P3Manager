@@ -74,4 +74,4 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ${{ secrets.MSIX_PATH }}
+        files: ${{ env.MSIX_PATH }}
