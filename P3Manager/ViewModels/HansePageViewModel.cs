@@ -1,91 +1,99 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml.Controls;
 using P3Api;
 using P3Manager.Models;
 using P3Manager.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace P3Manager.ViewModels;
 
-public class DummyTown
-{
-    public String Id { get; set; } = "test";
-    public int[] Wares;
-
-    public DummyTown() {
-        this.Wares = new int[20];
-    }
-}
 public class HansePageViewModel : ObservableObject
 {
-    private ObservableCollection<TownModel> towns = new();
-    private List<DummyTown> dummyTowns;
+    private volatile bool Running = true;
 
-    public HansePageViewModel() {
-        // var poll = this.Poll();
-        this.dummyTowns = new List<DummyTown>();
-        for (int i = 0; i< 20; i++)
+    public HansePageViewModel()
+    {
+        for (int i = 0; i < WareData.Length; i++)
         {
-            dummyTowns.Add(new DummyTown());
+            WareData[i] = new HubWareModel();
+            WareData[i].Id = (WareId)i;
         }
+        var poll = this.Poll();
     }
 
-    public ObservableCollection<TownModel> Towns
-    {
-        get { return this.towns; }
-        set { this.towns = value; }
-    }
+    public HubWareModel[] WareData { get; set; } = new HubWareModel[20];
 
-    public List<DummyTown> DummyTowns
+    public void Stop()
     {
-        get { return this.dummyTowns; }
+        this.Running = false;
     }
 
     private async Task Poll()
     {
-        await Task.Delay(2000);
-        while (true)
+        while (Running)
         {
-            Town?[] newData = P3PollService.Data;
-            int townsIndex = 0;
-            for (int i = 0; i < 40; i++)
+            var watch = Stopwatch.StartNew();
+            try
             {
-                if (newData[i] == null)
-                {
-                    // Town is not set, we might have to remove it
-                    if (townsIndex < this.towns.Count && (int)this.towns[townsIndex].Id == i)
-                    {
-                        this.towns.RemoveAt(townsIndex);
-                    }
-                }
-                else
-                {
-                    // Town is set, we might have to add it
-                    if (townsIndex < this.towns.Count && (int)this.towns[townsIndex].Id == i)
-                    {
-                        // Update
-                        if (this.towns[townsIndex].Id != newData[i]!.Id)
-                        {
-                            throw new Exception();
-                        }
-                        this.towns[townsIndex].Storage = newData[i]!.Storage;
-                        //this.towns[townsIndex].OnPropertyChanged("Storage");
-                    }
-                    else
-                    {
-                        // Add
-                        this.towns.Insert(townsIndex, new((TownId) i, newData[i]!.Storage));
-                    }
-                    townsIndex += 1;
-                }
+                this.Update();
             }
-            // OnPropertyChanged(nameof(this.Towns));
-            OnPropertyChanged(nameof(this.Towns));
-            await Task.Delay(1000000);
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"{ex}");
+            }
+            finally
+            {
+                watch.Stop();
+                await Task.Delay(1000);
+            }
+        }
+        Debug.WriteLine("HansePageViewModel stopping");
+    }
+
+    private void Update()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            WareData[i].Id = (WareId)i;
+            WareData[i].Wares = 0;
+            WareData[i].WeeklyTownProduction = 0;
+            WareData[i].WeeklyTownCitizensConsumption = 0;
+            WareData[i].WeeklyTownBusinessesConsumption = 0;
+            WareData[i].WeeklyMerchantProduction = 0;
+            WareData[i].WeeklyMerchantConsumption = 0;
+        }
+
+        Town?[] newData = P3PollService.Data;
+        foreach (var town in newData)
+        {
+            if (town == null) continue;
+            for (int i = 0; i < 20; i++)
+            {
+                WareData[i].Wares += town.Storage.Wares[i] / NativeMethods.get_ware_scaling((WareId)i);
+                WareData[i].WeeklyTownProduction += town.Storage.DailyProduction[i] * 7 / NativeMethods.get_ware_scaling((WareId)i);
+                WareData[i].WeeklyTownCitizensConsumption += town.DailyConsumptionsCitizens[i] * 7 / NativeMethods.get_ware_scaling((WareId)i);
+                WareData[i].WeeklyTownBusinessesConsumption += town.Storage.DailyConsumptionBusinesses[i] * 7 / NativeMethods.get_ware_scaling((WareId)i);
+                WareData[i].WeeklyMerchantProduction += town.Offices.Sum(e => e.Storage.DailyProduction[i]) * 7 / NativeMethods.get_ware_scaling((WareId)i);
+                WareData[i].WeeklyMerchantConsumption += town.Offices.Sum(e => e.Storage.DailyConsumptionBusinesses[i]) * 7 / NativeMethods.get_ware_scaling((WareId)i);
+            }
+        }
+        for (int i = 0; i < 20; i++)
+        {
+            WareData[i].NotifyPropertyChanged(nameof(HubWareModel.Wares));
+            WareData[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyTownProduction));
+            WareData[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyTownCitizensConsumption));
+            WareData[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyTownBusinessesConsumption));
+            WareData[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyMerchantProduction));
+            WareData[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyMerchantConsumption));
+            WareData[i].NotifyPropertyChanged(nameof(HubWareModel.TotalProduction));
+            WareData[i].NotifyPropertyChanged(nameof(HubWareModel.TotalConsumption));
         }
     }
 }

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "P3Manager (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "P3Manager (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

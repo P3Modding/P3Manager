@@ -27,5 +27,10 @@ namespace P3Manager.Views
         {
             this.InitializeComponent();
         }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            this.ViewModel.Stop();
+        }
     }
 }

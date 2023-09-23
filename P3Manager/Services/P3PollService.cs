@@ -12,6 +12,7 @@ namespace P3Manager.Services;
 public class P3PollService
 {
     public static volatile Town?[] Data = new Town[40];
+    public static volatile string? GameFolder;
 
     public P3PollService()
     {
@@ -26,6 +27,7 @@ public class P3PollService
             {
                 var watch = Stopwatch.StartNew();
                 var handle = new P3Handle();
+                GameFolder = handle.GameFolder;
                 foreach (var town in (TownId[])Enum.GetValues(typeof(TownId)))
                 {
                     var townData = handle.ReadTown(town);
@@ -33,11 +35,14 @@ public class P3PollService
                 }
                 watch.Stop();
                 //Debug.WriteLine($"Towns fetched in {watch.ElapsedMilliseconds}");
-                await Task.Delay(1000);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+            }
+            finally
+            {
+                await Task.Delay(1000);
             }
         }
     }

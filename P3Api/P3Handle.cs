@@ -16,7 +16,11 @@ public unsafe class P3Handle
         }
         // Debug.WriteLine($"Opening {processes[0].Id}");
         this.api = NativeMethods.new_api((uint)processes[0].Id);
+        this.GameFolder = Path.GetDirectoryName(processes[0].MainModule!.FileName)!;
+
     }
+
+    public string GameFolder { get; set; }
 
     public Town? ReadTown(TownId townId)
     {
@@ -49,9 +53,9 @@ public unsafe class P3Handle
                     }
                 }).ToArray(),
         };
-            
-            
-            
+
+
+
         NativeMethods.free_town(town_ptr);
         return town;
     }

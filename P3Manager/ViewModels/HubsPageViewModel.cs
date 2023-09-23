@@ -18,121 +18,131 @@ using Tomlyn;
 using Tomlyn.Model;
 using Windows.Gaming.Input;
 
-namespace P3Manager.ViewModels
+namespace P3Manager.ViewModels;
+
+public class HubsPageViewModel : ObservableObject
 {
-    public class HubsPageViewModel : ObservableObject
+    private volatile bool Running = true;
+
+    public HubsPageViewModel()
     {
-        public HubsPageViewModel()
-        {
-            var poll = this.Poll();
-        }
+        var poll = this.Poll();
+    }
 
-        public ObservableCollection<HubModel> Hubs { get; set; } = new ObservableCollection<HubModel>();
+    public ObservableCollection<HubModel> Hubs { get; set; } = new ObservableCollection<HubModel>();
 
-        private async Task Poll()
+    public void Stop()
+    {
+        this.Running = false;
+    }
+
+    private async Task Poll()
+    {
+        while (Running)
         {
-            while (true)
+            var watch = Stopwatch.StartNew();
+            try
             {
-                var watch = Stopwatch.StartNew();
-                try
-                {
-                    var config = Toml.ToModel(File.ReadAllText(@"C:\Users\Benni\Patrician 3_workbench\P3.toml"));
-                    Town?[] newData = P3PollService.Data;
-                    var p3ManagerConfig = (TomlTable)config["P3Manager"];
-                    var hubsConfig = (TomlTableArray)p3ManagerConfig["hubs"];
-                    int hubsIndex = 0;
+                var config = Toml.ToModel(File.ReadAllText(P3PollService.GameFolder + @"\P3.toml"));
+                Town?[] newData = P3PollService.Data;
+                var p3ManagerConfig = (TomlTable)config["P3Manager"];
+                var hubsConfig = (TomlTableArray)p3ManagerConfig["hubs"];
+                int hubsIndex = 0;
 
-                    // Iterate over all configured hubs, update if already present, insert if not, remove if stale
-                    foreach (TomlTable configuredHub in hubsConfig)
+                // Iterate over all configured hubs, update if already present, insert if not, remove if stale
+                foreach (TomlTable configuredHub in hubsConfig)
+                {
+                    var hub = Enum.Parse<TownId>((string)configuredHub["town"]);
+                    if (hubsIndex < this.Hubs.Count)
                     {
-                        var hub = Enum.Parse<TownId>((string)configuredHub["town"]);
-                        if (hubsIndex < this.Hubs.Count)
+                        var oldHub = this.Hubs[hubsIndex];
+                        if (hub == oldHub.Town)
                         {
-                            var oldHub = this.Hubs[hubsIndex];
-                            if (hub == oldHub.Town)
-                            {
-                                // Hub is at expected position, we have to update it
-                                UpdateHubWareModels(oldHub.WareData, hub, newData, configuredHub);
-                            }
-                            else
-                            {
-                                // Another hub is at the expected position
-                                var hubWareModels = new HubWareModel[20];
-                                for (int i = 0; i < hubWareModels.Length; i++)
-                                {
-                                    hubWareModels[i] = new HubWareModel();
-                                }
-                                UpdateHubWareModels(hubWareModels, hub, newData, configuredHub);
-                                this.Hubs.Insert(hubsIndex, new HubModel(hub, hubWareModels));
-                            }
+                            // Hub is at expected position, we have to update it
+                            UpdateHubWareModels(oldHub.WareData, hub, newData, configuredHub);
                         }
                         else
                         {
-                            // Hub is new
+                            // Another hub is at the expected position
                             var hubWareModels = new HubWareModel[20];
                             for (int i = 0; i < hubWareModels.Length; i++)
                             {
                                 hubWareModels[i] = new HubWareModel();
                             }
                             UpdateHubWareModels(hubWareModels, hub, newData, configuredHub);
-                            this.Hubs.Add(new HubModel(hub, hubWareModels));
+                            this.Hubs.Insert(hubsIndex, new HubModel(hub, hubWareModels));
                         }
-                        hubsIndex += 1;
                     }
-                    for (; hubsIndex < this.Hubs.Count; hubsIndex++)
+                    else
                     {
-                        this.Hubs.RemoveAt(hubsIndex);
+                        // Hub is new
+                        var hubWareModels = new HubWareModel[20];
+                        for (int i = 0; i < hubWareModels.Length; i++)
+                        {
+                            hubWareModels[i] = new HubWareModel();
+                        }
+                        UpdateHubWareModels(hubWareModels, hub, newData, configuredHub);
+                        this.Hubs.Add(new HubModel(hub, hubWareModels));
                     }
+                    hubsIndex += 1;
                 }
-                catch (Exception ex)
+                for (; hubsIndex < this.Hubs.Count; hubsIndex++)
                 {
-                    Debug.WriteLine($"{ex}");
+                    this.Hubs.RemoveAt(hubsIndex);
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"{ex}");
+            }
+            finally
+            {
                 watch.Stop();
                 await Task.Delay(1000);
             }
         }
+        Debug.WriteLine("HubsPageViewModel stopping");
+    }
 
-        private void UpdateHubWareModels(HubWareModel[] models, TownId hub, Town?[] data, TomlTable configuration)
+    private void UpdateHubWareModels(HubWareModel[] models, TownId hub, Town?[] data, TomlTable configuration)
+    {
+        var satellites = (TomlTableArray)configuration["satellites"];
+        for (int i = 0; i < 20; i++)
         {
-            var satellites = (TomlTableArray)configuration["satellites"];
-            for (int i = 0; i < 20; i++)
+            models[i].Id = (WareId)i;
+            models[i].Wares = 0;
+            models[i].WeeklyTownProduction = 0;
+            models[i].WeeklyTownCitizensConsumption = 0;
+            models[i].WeeklyTownBusinessesConsumption = 0;
+            models[i].WeeklyMerchantProduction = 0;
+            models[i].WeeklyMerchantConsumption = 0;
+        }
+        foreach (var town in data)
+        {
+            if (town == null) continue;
+            if (hub == town.Id || satellites.Any(e => (string)e["town"] == town.Id.ToString()))
             {
-                models[i].Id = (WareId)i;
-                models[i].Wares = 0;
-                models[i].WeeklyTownProduction = 0;
-                models[i].WeeklyTownCitizensConsumption = 0;
-                models[i].WeeklyTownBusinessesConsumption = 0;
-                models[i].WeeklyMerchantProduction = 0;
-                models[i].WeeklyMerchantConsumption = 0;
-            }
-            foreach (var town in data)
-            {
-                if (town == null) continue;
-                if (hub == town.Id || satellites.Any(e => (string)e["town"] == town.Id.ToString()))
+                for (int i = 0; i < 20; i++)
                 {
-                    for (int i = 0; i < 20; i++)
-                    {
-                        models[i].Wares += town.Storage.Wares[i] / NativeMethods.get_ware_scaling((WareId)i);
-                        models[i].WeeklyTownProduction += town.Storage.DailyProduction[i] * 7 / NativeMethods.get_ware_scaling((WareId)i);
-                        models[i].WeeklyTownCitizensConsumption += town.DailyConsumptionsCitizens[i] * 7 / NativeMethods.get_ware_scaling((WareId)i);
-                        models[i].WeeklyTownBusinessesConsumption += town.Storage.DailyConsumptionBusinesses[i] * 7 / NativeMethods.get_ware_scaling((WareId)i);
-                        models[i].WeeklyMerchantProduction += town.Offices.Sum(e => e.Storage.DailyProduction[i]) * 7 / NativeMethods.get_ware_scaling((WareId)i);
-                        models[i].WeeklyMerchantConsumption += town.Offices.Sum(e => e.Storage.DailyConsumptionBusinesses[i]) * 7 / NativeMethods.get_ware_scaling((WareId)i);
-                    }
+                    models[i].Wares += town.Storage.Wares[i] / NativeMethods.get_ware_scaling((WareId)i);
+                    models[i].WeeklyTownProduction += town.Storage.DailyProduction[i] * 7 / NativeMethods.get_ware_scaling((WareId)i);
+                    models[i].WeeklyTownCitizensConsumption += town.DailyConsumptionsCitizens[i] * 7 / NativeMethods.get_ware_scaling((WareId)i);
+                    models[i].WeeklyTownBusinessesConsumption += town.Storage.DailyConsumptionBusinesses[i] * 7 / NativeMethods.get_ware_scaling((WareId)i);
+                    models[i].WeeklyMerchantProduction += town.Offices.Sum(e => e.Storage.DailyProduction[i]) * 7 / NativeMethods.get_ware_scaling((WareId)i);
+                    models[i].WeeklyMerchantConsumption += town.Offices.Sum(e => e.Storage.DailyConsumptionBusinesses[i]) * 7 / NativeMethods.get_ware_scaling((WareId)i);
                 }
             }
-            for (int i = 0; i < 20; i++)
-            {
-                models[i].NotifyPropertyChanged(nameof(HubWareModel.Wares));
-                models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyTownProduction));
-                models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyTownCitizensConsumption));
-                models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyTownBusinessesConsumption));
-                models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyMerchantProduction));
-                models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyMerchantConsumption));
-                models[i].NotifyPropertyChanged(nameof(HubWareModel.TotalProduction));
-                models[i].NotifyPropertyChanged(nameof(HubWareModel.TotalConsumption));
-            }
+        }
+        for (int i = 0; i < 20; i++)
+        {
+            models[i].NotifyPropertyChanged(nameof(HubWareModel.Wares));
+            models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyTownProduction));
+            models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyTownCitizensConsumption));
+            models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyTownBusinessesConsumption));
+            models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyMerchantProduction));
+            models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyMerchantConsumption));
+            models[i].NotifyPropertyChanged(nameof(HubWareModel.TotalProduction));
+            models[i].NotifyPropertyChanged(nameof(HubWareModel.TotalConsumption));
         }
     }
 }

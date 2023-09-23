@@ -16,27 +16,8 @@
     <Page.DataContext>
         <viewmodels:HansePageViewModel x:Name="ViewModel" />
     </Page.DataContext>
-    <ListView Margin="10" ItemsSource="{x:Bind ViewModel.DummyTowns, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="False">
-        <ListView.ItemsPanel>
-            <ItemsPanelTemplate>
-                <StackPanel></StackPanel>
-            </ItemsPanelTemplate>
-        </ListView.ItemsPanel>
-        <!--
-        <ListView.ItemTemplate>
-            <DataTemplate x:DataType="viewmodels:DummyTown">
-                <StackPanel>
-                    <TextBlock Text="{x:Bind Id}" Margin="10 10 10 10" />
-                    <ListView ItemsSource="{x:Bind Wares, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="False">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}" />
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </StackPanel>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-        -->
-    </ListView>
+    <controls:DataGrid ItemsSource="{x:Bind ViewModel.WareData, Mode=OneWay}" IsReadOnly="True" GridLinesVisibility="All"
+                                       HeadersVisibility="All" CanUserReorderColumns="False" CanUserResizeColumns="False"
+                                       ColumnWidth="*">
+    </controls:DataGrid>
 </Page>

@@ -6,6 +6,7 @@
     xmlns:local="using:P3Manager"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="P3Manager"
     mc:Ignorable="d">
 
     <Grid x:Name="Root"
@@ -19,24 +20,25 @@
                         IsBackButtonVisible="Collapsed"
                         Background="Transparent"
                         IsSettingsVisible="False"
+                        IsPaneToggleButtonVisible="False"
                         Margin="0">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Hanse"
                                     Tag="P3Manager.Views.HansePage"
                                     ToolTipService.ToolTip="Hanse">
-                    <NavigationViewItem.Icon>
+                    <!--<NavigationViewItem.Icon>
                         <BitmapIcon UriSource="/Assets/HansePage.png"
                                     ShowAsMonochrome="False" />
 
-                    </NavigationViewItem.Icon>
+                    </NavigationViewItem.Icon>-->
                 </NavigationViewItem>
                 <NavigationViewItem Content="Hubs"
                                     Tag="P3Manager.Views.HubsPage"
                                     ToolTipService.ToolTip="Gallery">
-                    <NavigationViewItem.Icon>
+                    <!--<NavigationViewItem.Icon>
                         <BitmapIcon UriSource="/Assets/HubsPage.png"
                                     ShowAsMonochrome="False" />
-                    </NavigationViewItem.Icon>
+                    </NavigationViewItem.Icon>-->
                 </NavigationViewItem>
             </NavigationView.MenuItems>
             <Frame x:Name="ContentFrame"
