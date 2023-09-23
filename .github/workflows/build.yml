@@ -70,3 +70,8 @@ jobs:
         dotnet publish -c ${{ matrix.configuration }}
         tree
 
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: MSIX Package
+        path: **\*.msix
