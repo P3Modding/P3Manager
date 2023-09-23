@@ -68,7 +68,7 @@ jobs:
         dotnet publish -c ${{ matrix.configuration }}
         tree
         $path = Get-ChildItem -r **/P3Manager_*.msix
-        echo "MSIX_PATH=$path" >> $GITHUB_ENV
+        echo "MSIX_PATH=$path" >> $env:GITHUB_ENV
         echo "path=$path"
 
     - name: Release
