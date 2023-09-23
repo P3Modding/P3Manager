@@ -21,7 +21,61 @@
             <DataTemplate x:DataType="models:HubModel">
                 <StackPanel>
                     <TextBlock Text="{x:Bind Town}" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Margin="10" />
-                    <controls:DataGrid ItemsSource="{x:Bind WareData, Mode=OneWay}" IsReadOnly="True" >
+                    <!--
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="Wares" />
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="Weekly Production (Town)" />
+                        <TextBlock Grid.Row="0" Grid.Column="3" Text="Weekly Citizens Consumption (Town)" />
+                        <TextBlock Grid.Row="0" Grid.Column="4" Text="Weekly Businesses Consumption (Town)" />
+                        <TextBlock Grid.Row="0" Grid.Column="5" Text="Weekly Merchant Production" />
+                        <TextBlock Grid.Row="0" Grid.Column="6" Text="Weekly Merchant Consumption" />
+                        <TextBlock Grid.Row="0" Grid.Column="7" Text="Production (Total)" />
+                        <TextBlock Grid.Row="0" Grid.Column="8" Text="Consumption (Total)" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Icon"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind WareData[0].Wares, Mode=OneWay}" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{x:Bind WareData[0].WeeklyTownProduction, Mode=OneWay}" />
+                        <TextBlock Grid.Row="1" Grid.Column="3" Text="{x:Bind WareData[0].WeeklyTownCitizensConsumption, Mode=OneWay}" />
+                        <TextBlock Grid.Row="1" Grid.Column="4" Text="{x:Bind WareData[0].WeeklyTownBusinessesConsumption, Mode=OneWay}" />
+                        <TextBlock Grid.Row="1" Grid.Column="5" Text="{x:Bind WareData[0].WeeklyMerchantProduction, Mode=OneWay}" />
+                        <TextBlock Grid.Row="1" Grid.Column="6" Text="{x:Bind WareData[0].WeeklyMerchantConsumption, Mode=OneWay}" />
+                        <TextBlock Grid.Row="1" Grid.Column="7" Text="{x:Bind WareData[0].TotalProduction, Mode=OneWay}" />
+                        <TextBlock Grid.Row="1" Grid.Column="8" Text="{x:Bind WareData[0].TotalConsumption, Mode=OneWay}" />
+                    </Grid>
+                    -->
+                    <controls:DataGrid ItemsSource="{x:Bind WareData, Mode=OneWay}" IsReadOnly="True" GridLinesVisibility="All"
+                                       HeadersVisibility="All" CanUserReorderColumns="False" CanUserResizeColumns="False"
+                                       ColumnWidth="*">
                     </controls:DataGrid>
                 </StackPanel>
             </DataTemplate>

@@ -22,16 +22,23 @@ public class P3PollService
     {
         while (true)
         {
-            var watch = Stopwatch.StartNew();
-            var handle = new P3Handle();
-            foreach (var town in (TownId[]) Enum.GetValues(typeof(TownId)))
+            try
             {
-                var townData = handle.ReadTown(town);
-                Data[(int) town] = townData;
+                var watch = Stopwatch.StartNew();
+                var handle = new P3Handle();
+                foreach (var town in (TownId[])Enum.GetValues(typeof(TownId)))
+                {
+                    var townData = handle.ReadTown(town);
+                    Data[(int)town] = townData;
+                }
+                watch.Stop();
+                //Debug.WriteLine($"Towns fetched in {watch.ElapsedMilliseconds}");
+                await Task.Delay(1000);
             }
-            watch.Stop();
-            //Debug.WriteLine($"Towns fetched in {watch.ElapsedMilliseconds}");
-            await Task.Delay(1000);
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
         }
     }
 }

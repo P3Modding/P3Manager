@@ -33,7 +33,7 @@ namespace P3Manager
             SetCurrentNavigationViewItem(args.SelectedItemContainer as NavigationViewItem);
         }
 
-        public void SetCurrentNavigationViewItem(NavigationViewItem item)
+        public void SetCurrentNavigationViewItem(NavigationViewItem? item)
         {
             if (item == null)
             {
@@ -45,7 +45,7 @@ namespace P3Manager
                 return;
             }
 
-            ContentFrame.Navigate(Type.GetType(item.Tag.ToString()), item.Content);
+            ContentFrame.Navigate(Type.GetType(item.Tag.ToString()!), item.Content);
             NavigationView.Header = item.Content;
             NavigationView.SelectedItem = item;
         }

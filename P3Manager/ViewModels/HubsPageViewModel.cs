@@ -36,7 +36,6 @@ namespace P3Manager.ViewModels
                 var watch = Stopwatch.StartNew();
                 try
                 {
-                    Debug.WriteLine("Updating UI");
                     var config = Toml.ToModel(File.ReadAllText(@"C:\Users\Benni\Patrician 3_workbench\P3.toml"));
                     Town?[] newData = P3PollService.Data;
                     var p3ManagerConfig = (TomlTable)config["P3Manager"];
@@ -90,7 +89,6 @@ namespace P3Manager.ViewModels
                     Debug.WriteLine($"{ex}");
                 }
                 watch.Stop();
-                Debug.WriteLine($"Hubs update took {watch.ElapsedMilliseconds}");
                 await Task.Delay(1000);
             }
         }
@@ -132,6 +130,8 @@ namespace P3Manager.ViewModels
                 models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyTownBusinessesConsumption));
                 models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyMerchantProduction));
                 models[i].NotifyPropertyChanged(nameof(HubWareModel.WeeklyMerchantConsumption));
+                models[i].NotifyPropertyChanged(nameof(HubWareModel.TotalProduction));
+                models[i].NotifyPropertyChanged(nameof(HubWareModel.TotalConsumption));
             }
         }
     }

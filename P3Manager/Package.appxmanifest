@@ -10,7 +10,7 @@
   <Identity
     Name="5a0466c5-d2c0-4998-8e67-e1bdc5674ab0"
     Publisher="CN=Benni"
-    Version="1.0.0.0" />
+    Version="0.1.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="5a0466c5-d2c0-4998-8e67-e1bdc5674ab0" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

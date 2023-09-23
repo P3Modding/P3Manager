@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace P3Manager.Models;
 
-public class TownModel : INotifyPropertyChanged
+public class TownModel
 {
     public TownModel(TownId id, Storage storage)
     {
@@ -17,7 +17,6 @@ public class TownModel : INotifyPropertyChanged
     }
 
     public TownId Id { get; set; }
-    public Storage Storage { get; set; }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public Storage Storage { get; set; }
 }
