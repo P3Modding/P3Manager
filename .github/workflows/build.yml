@@ -56,24 +56,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
 
     - name: Build
-      run: |
-        cp P3Manager\P3Manager.csproj.user.release P3Manager\P3Manager.csproj.user
-        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERT }}")
-        [IO.File]::WriteAllBytes("P3Manager\P3Manager_TemporaryKey.pfx", $pfx_cert_byte)
-        dotnet publish -c ${{ matrix.configuration }}
-        tree
-        $path = Get-ChildItem -r **/P3Manager_*.msix
-        echo "MSIX_PATH=$path" >> $GITHUB_ENV
-        echo "path=$path"
-
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        path: "**/P3Manager_*.msix"
+      run: dotnet build
