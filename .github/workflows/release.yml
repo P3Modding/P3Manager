@@ -68,10 +68,20 @@ jobs:
         dotnet publish -c ${{ matrix.configuration }}
         $path = (Get-ChildItem -r **/P3Manager_*.msix).FullName
         $path = $path -replace '\\','/'
+        $cert_path = (Get-ChildItem -r **/P3Manager_*.cer).FullName
+        $cert_path = $cert_path -replace '\\','/'
         echo "MSIX_PATH=$path" >> $env:GITHUB_ENV
+        echo "CERT_PATH=$cert_path" >> $env:GITHUB_ENV
         echo "path=$path"
 
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         files: ${{ env.MSIX_PATH }}
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ${{ env.MSIX_PATH }}
+          ${{ env.CERT_PATH }}
